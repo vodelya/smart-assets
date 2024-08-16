@@ -1,0 +1,77 @@
+# Copyright © 2020 Interplanetary Database Association e.V.,
+# BigchainDB and IPDB software contributors.
+# SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+# Code is Apache-2.0 and docs are CC-BY-4.0
+
+---
+"$schema": "http://json-schema.org/draft-04/schema#"
+type: object
+title: Transaction Schema - CREATE specific constraints
+required:
+  - asset
+  - inputs
+  - metadata
+properties:
+  asset:
+    additionalProperties: false
+    properties:
+      data:
+        anyOf:
+          - type: object
+            additionalProperties: false
+            properties:
+              asset_identifier:
+                type: string
+              asset_type:
+                type: string
+              issuer:
+                type: string
+              issuer_type:
+                type: string
+              categories:
+                type: array
+                items:
+                  type: string
+              public_key:
+                type: string
+            required:
+              - asset_identifier
+              - asset_type
+              - issuer
+              - issuer_type
+              - public_key
+              - categories
+          - type: "null"
+    required:
+      - data
+  inputs:
+    type: array
+    title: "Transaction inputs"
+    maxItems: 1
+    minItems: 1
+    items:
+      type: "object"
+      required:
+        - fulfills
+      properties:
+        fulfills:
+          type: "null"
+  metadata:
+    anyOf:
+      - type: "null"
+      - type: object
+        additionalProperties: true
+        properties:
+          asset_metadata:
+            type: object
+            additionalProperties: true
+            properties:
+              policies:
+                type: object
+                additionalProperties: true  # Allow additional properties in policies
+              valid_until:
+                type: string
+                format: date-time  # Ensure valid_until is a valid date-time format
+              status:
+                type: string
+                enum: ["active", "inactive"]
